@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="T.png">
+    <link rel="stylesheet" href="styles.css">
+    <title>PalSU Scheduler</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+</head>
+
+<body>
+<div class="header">
+    <div class="logos-container">
+        <div class="logos-container">
+            <img class="logo" src="left_logo.png" alt="Left Logo">
+            <img class="logo" src="T.png" alt="T Logo">
+            <img class="logo" src="right_logo.png" alt="Right Logo">
+        </div>        
+    </div>
+    <br>
+    <br>
+    <br>
+    <h1>PSU Scheduler - NEW IT BUILDING (NIT)</h1>
+</div>
+
+<div class="time-and-date">
+    <div id="time"></div>
+    <div id="day"></div>
+    <div id="date"></div>
+</div>
+
+<div class="main-content">
+    <div class="schedule">
+        <table style="width:100%">
+            <tr>
+                <th>Room Name</th>
+                <th>Professor Name</th>
+                <th id="time_sched">Schedule Time</th>
+                <th id="status">Status</th>
+            </tr>
+            <tr>
+                <td>NIT1</td>
+                <td>Bryan Etoquilla<br>Bryan Etoquilla</td>
+                <td id="time_sch">4:55 pm to 5:25 PM - Ongoing<br>6:00 pm to 6:25 PM - Pending</td>
+                <td class="status scheduled"></td>
+            </tr>
+            <tr>
+                <td>NIT2</td>
+                <td></td>
+                <td id="time_sch"></td>
+                <td class="status available"></td>
+            </tr>
+            <tr>
+                <td>NIT3</td>
+                <td></td>
+                <td id="time_sch"></td>
+                <td class="status available"></td>
+            </tr>
+            <tr>
+                <td>NIT4</td>
+                <td></td>
+                <td id="time_sch"></td>
+                <td class="status available"></td>
+            </tr>
+            <tr>
+                <td>NIT5</td>
+                <td></td>
+                <td id="time_sch"></td>
+                <td class="status available"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="legend">
+    <p><span class="legend-color" style="background-color: red;"></span> Scheduled</p>
+    <p><span class="legend-color" style="background-color: green;"></span> Available</p>
+</div>
+
+<script src="script.js"></script>
+    
+</body>
+</html>

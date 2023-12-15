@@ -1,0 +1,164 @@
+.header {
+    text-align: center;
+}
+.header h1 {
+    margin: 0;
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-weight: 500; /* You can adjust the font weight */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+.logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 10px; /* Adjust the margin value to control spacing between logos */
+}
+
+
+.logo:nth-child(1) {
+    position: absolute;
+    left: 590px; /* Adjust the left position as needed for the left logo */
+}
+
+.logo:nth-child(2) {
+    position: absolute;
+    left: 700px; /* Adjust the left position as needed for the center logo */
+}
+
+.logo:nth-child(3) {
+    position: absolute;
+    right: 600px; /* Adjust the right position as needed for the right logo */
+}
+
+.logo.center {
+    position: absolute;
+    left: 100px; /* Adjust the left position as needed for the center logo */
+    
+}
+
+.time-and-date {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.schedule {
+    flex-grow: 1;
+}
+
+.status {
+    font-weight: bold;
+    color: white;
+}
+
+.status.available {
+    background-color: green; /* Green background for "Available" */
+}
+
+.status.scheduled {
+    background-color: red; /* Red background for "Scheduled" */
+}
+
+.legend {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px;
+    text-align: left;
+}
+
+.legend p {
+    margin: 5px;
+    font-weight: bold;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 25px; /* Change the width as needed */
+    height: 25px; /* Change the height as needed */
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.tm {
+    margin-top: 60px;
+    margin-bottom: 100px;
+    display: flex;
+    color: white;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 8%;
+}
+
+img {
+    border-radius: 100%;
+}
+
+body {
+    background-image: url("11.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+table, th, td, tr {
+    border-spacing: 30px;
+    font-size: large;
+}
+
+th {
+    border: 10px solid rgb(255, 136, 0);
+    opacity: 0.8;
+    border-radius: 10px;
+    border-collapse: collapse;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: rgb(255, 136, 0);
+}
+
+td {
+    opacity: 0.8;
+    border-collapse: collapse;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    background-color: rgba(255, 136, 0, 0.58);
+}
+
+#time {
+    font-size: 50px;
+    color: #fefefe;
+}
+
+#day {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#date {
+    color: white;
+    font-size: 30px;
+}

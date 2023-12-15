@@ -1,15 +1,20 @@
 import datetime
 from bs4 import BeautifulSoup
 import serial
+import tkinter as tk
+from tkinter import ttk
+from tkinter import StringVar
+import time 
 
 ser = serial.Serial('COM3', 9600)  # Replace 'COM3' with the actual COM port where your Arduino is connected
 
 shd = {
-    "room1": {"ProfName": [], "Schedule_Time": []},
-    "room2": {"ProfName": [], "Schedule_Time": []},
-    "room3": {"ProfName": [], "Schedule_Time": []},
+    "NIT1": {"ProfName": [], "Schedule_Time": []},
+    "NIT2": {"ProfName": [], "Schedule_Time": []},
+    "NIT3": {"ProfName": [], "Schedule_Time": []},
+    "MTC1": {"ProfName": [], "Schedule_Time": []},
+    "MTC2": {"ProfName": [], "Schedule_Time": []},
 }
-
 
 def update_schedule():
     current_time = datetime.datetime.now()
@@ -76,8 +81,8 @@ def print_schedule_table(current_time):
                 <tr>
                     <th>Room Name</th>
                     <th>Professor Name</th>
-                    <th>Schedule Time</th>
-                    <th>Status</th>
+                    <th class="time_sch">Schedule Time</th>
+                    <th class="status">Status</th>
                 </tr>"""
 
     for room, data in shd.items():
@@ -86,23 +91,23 @@ def print_schedule_table(current_time):
         # Create a list of schedule items with their start times and index
         schedule_items = [(i, scheduled_time) for i, scheduled_time in enumerate(data["Schedule_Time"])]
 
-
         # Sort the schedule items based on the proximity of their start times to the current time
         schedule_items.sort(key=lambda x: datetime.datetime.strptime(x[1].split(" to ")[0], "%I:%M %p"))
 
         next_class_time = None
         status = []  # Initialize status list
 
-        for i, scheduled_time in schedule_items:
-            scheduled_start, scheduled_end = scheduled_time.split(" to ")
+        if schedule_items:
+            for i, scheduled_time in schedule_items:
+                scheduled_start, scheduled_end = scheduled_time.split(" to ")
 
-            if current_time_str >= datetime.datetime.strptime(scheduled_start, "%I:%M %p").strftime("%H:%M:%S") and \
-                    current_time_str <= datetime.datetime.strptime(scheduled_end, "%I:%M %p").strftime("%H:%M:%S"):
-                status.append(f"Ongoing ({scheduled_start} to {scheduled_end})")
-                
-            elif current_time_str < datetime.datetime.strptime(scheduled_start, "%I:%M %p").strftime("%H:%M:%S"):
-                next_class_time = f"{scheduled_start} to {scheduled_end}"
-                status.append(f"Next class ({next_class_time})")
+                if current_time_str >= datetime.datetime.strptime(scheduled_start, "%I:%M %p").strftime("%H:%M:%S") and \
+                        current_time_str <= datetime.datetime.strptime(scheduled_end, "%I:%M %p").strftime("%H:%M:%S"):
+                    status.append(f"Ongoing ({scheduled_start} to {scheduled_end})")
+
+                elif current_time_str < datetime.datetime.strptime(scheduled_start, "%I:%M %p").strftime("%H:%M:%S"):
+                    next_class_time = f"{scheduled_start} to {scheduled_end}"
+                    status.append(f"Next class ({next_class_time})")
 
         if not status and schedule_items:
             status.append(f"No upcoming classes")
@@ -123,111 +128,43 @@ def print_schedule_table(current_time):
         html_file.write(f"""<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="refresh" content="5">
-    <link rel="icon" type="image/x-icon" href="T.jpg">
-    <title>PSU</title>
-
-    <style>
-        .tm{{
-            margin-top: 60px;
-            margin-bottom: 100px;
-            display: flex;
-            color: white;
-        }}
-        .center {{
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 8%;
-        }}
-
-        img {{
-            border-radius: 100%;
-        }}
-
-        body {{
-            background-image: url("1.png");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }}
-
-        table, th, td, tr{{
-            border-spacing: 30px;
-            font-size: large;
-        }}
-        th {{
-            border: 10px solid rgb(255, 136, 0);
-            opacity: 0.8;
-            border-radius: 10px;
-            border-collapse: collapse;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
-            background-color: rgb(255, 136, 0);
-        }}
-        td {{
-            border: 1px solid rgba(255, 136, 0, 0.58);
-            opacity: 0.8;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-right: 5px;
-            background-color: rgba(255, 136, 0, 0.58);
-        }}
-
-        #time {{
-            font-size: 50px;
-            color: #fefefe;
-        }}
-        #day {{
-            color: white;
-            font-size: 25px;
-            font-weight: bold;
-        }}
-        #date {{
-            color: white;
-            font-size: 30px;
-        }}
-    </style>
+    <link rel="icon" type="image/x-icon" href="T.png">
+    <link rel="stylesheet" href="styles.css">
+    <title>PalSU Scheduler</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 </head>
+
 <body>
-<div class="tm">
-    <h1><center>PSU Schedule</center></h1>
-    <img src="T.jpg" alt="Logo" width="50" height="80" class="center">
-    <div class="im">
-        <div id="time"></div>
-        <div id="day"></div>
-        <div id="date"></div>
+<div class="header">
+    <div class="logos-container">
+        <img class="logo" src="left_logo.png" alt="Left Logo">
+        <img class="logo" src="T.png" alt="T Logo">
+        <img class="logo" src="right_logo.png" alt="Right Logo">
+    </div>        
+    <br>
+    <br>
+    <br>
+    <h1>PSU Scheduler - Information Technology BUILDING (IT)</h1>
+</div>
+
+<div class="time-and-date">
+    <div id="time"></div>
+    <div id="day"></div>
+    <div id="date"></div>
+</div>
+
+<div class="main-content">
+    <div class="schedule">
+        {table} <!-- Include the generated table -->
     </div>
 </div>
-{table}
-<script>
-    function updateTime() {{
-        const timeLabel = document.getElementById('time');
-        const dayLabel = document.getElementById('day');
-        const dateLabel = document.getElementById('date');
-        
-        const now = new Date();
 
-        const timeString = now.toLocaleTimeString([], {{ hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }});
-        const dayString = now.toLocaleDateString('en-US', {{ weekday: 'long' }});
-        const dateString = now.toLocaleDateString('en-US', {{ year: 'numeric', month: 'long', day: 'numeric' }});
 
-        timeLabel.textContent = timeString;
-        dayLabel.textContent = dayString;
-        dateLabel.textContent = dateString;
-    }}
-
-    updateTime(); // Call the function to set initial values.
-
-    // Update the time every second
-    setInterval(updateTime, 1000);
-</script>
+<script src="script.js"></script>
+    
 </body>
-</html>""")
+</html>
+""")
 
 def check_schedule_conflict(room_schedule, start_time, end_time):
     for scheduled_time in room_schedule["Schedule_Time"]:
@@ -242,52 +179,82 @@ def check_schedule_conflict(room_schedule, start_time, end_time):
 
     return False
 
-def add_schedule():
-    print("Scan your RFID card!")
-    uid_data = ser.readline().decode().strip()
-    if uid_data == "Bryan Etoquilla":
-        uid_data = "Bryan Etoquilla"
-        print("Recognized")
+def run_tikenter():
+    root = tk.Tk()
+    root.title("Add Schedule")
 
-        while True:
-            while True:  # Loop to enter room name
-                room_name = input("Enter room (or type 'exit' to quit): ")
-                if room_name == "exit":
-                    return  # Exit the function
-                if room_name in shd:
-                    break  # Room name is valid, exit the room name loop
-                else:
-                    print("Room not found in the schedule. Please enter a valid room name.")
+    # Increase the font size for labels and buttons
+    root.option_add("*Font", "helvetica 18")
 
-            while True: 
-                # Loop to add multiple schedules for the same room
-                user_input = input("Enter your Time schedule (e.g., 1:00 PM to 5:00 PM): ")
+    # Create a frame to hold the content
+    frame = ttk.Frame(root)
 
-                try:
-                    user_start, user_end = user_input.split(" to ")
-                    start_time = datetime.datetime.strptime(user_start, "%I:%M %p").strftime("%H:%M:%S")
-                    end_time = datetime.datetime.strptime(user_end, "%I:%M %p").strftime("%H:%M:%S")
+    # Room Entry
+    room_label = ttk.Label(frame, text="Select Room:")
+    room_label.grid(row=0, column=0, sticky=tk.W, padx=10, pady=5)
 
-                    current_time = datetime.datetime.now().strftime("%H:%M:%S")
+    room_options = list(shd.keys())
+    room_var = tk.StringVar(value=room_options[0])
 
-                    if end_time < start_time:
-                        start_time, end_time = end_time, start_time
+    room_combobox = ttk.Combobox(frame, textvariable=room_var, values=room_options, state="readonly")
+    room_combobox.grid(row=0, column=1, columnspan=2, padx=10, pady=5)
 
-                    if start_time < current_time:
-                        print("Error: The schedule you entered is in the past relative to the current time.")
-                        continue  # Continue the loop to enter another schedule
+    # Schedule Entry
+    schedule_label = ttk.Label(frame, text="Select Start Time:")
+    schedule_label.grid(row=1, column=0, sticky=tk.W, padx=10, pady=5)
 
-                except ValueError:
-                    print("Invalid input format. Please use the format '1:00 PM to 5:00 PM.'")
-                    continue  # Continue the loop to enter another schedule
+    time_options = [
+    "{:d}:{:02d} {}".format(h if h != 0 else 12, m, "AM" if (h < 12 or h == 24) else "PM") 
+    for h in range(1, 13)
+    for m in range(0, 60, 2)
+] + [
+    "{:d}:{:02d} {}".format(h if h != 0 else 12, m, "PM" if h < 12 else "AM") 
+    for h in range(1, 13)
+    for m in range(0, 60, 2)
+]
+
+    start_time_var = StringVar(value=time_options[0])
+    end_time_var = StringVar(value=time_options[0])
+
+    start_time_combobox = ttk.Combobox(frame, textvariable=start_time_var, values=time_options, state="readonly")
+    start_time_combobox.grid(row=1, column=1, columnspan=2, padx=10, pady=5)
+
+    end_time_label = ttk.Label(frame, text="Select End Time:")
+    end_time_label.grid(row=2, column=0, sticky=tk.W, padx=10, pady=5)
+
+    end_time_combobox = ttk.Combobox(frame, textvariable=end_time_var, values=time_options, state="readonly")
+    end_time_combobox.grid(row=2, column=1, columnspan=2, padx=10, pady=5)
+
+    validation_label = ttk.Label(frame, text="", foreground="red")
+    validation_label.grid(row=3, column=0, columnspan=3, pady=5)
+
+    def submit_schedule():
+        room_name = room_var.get().strip()
+        start_time = start_time_var.get().strip()
+        end_time = end_time_var.get().strip()
+
+        if room_name in shd:
+            try:
+                user_start, user_end = start_time, end_time
+                start_time = datetime.datetime.strptime(user_start, "%I:%M %p").strftime("%H:%M:%S")
+                end_time = datetime.datetime.strptime(user_end, "%I:%M %p").strftime("%H:%M:%S")
+
+                current_time = datetime.datetime.now().strftime("%H:%M:%S")
+
+                if end_time < start_time:
+                    start_time, end_time = end_time, start_time
+
+                if start_time < current_time:
+                    validation_label.config(text="Error: The schedule you entered is in the past relative to the current time.")
+                    return
 
                 room_schedule = shd[room_name]
 
                 if check_schedule_conflict(room_schedule, start_time, end_time):
-                    print(f"Conflict: The room {room_name} is already scheduled during that time.")
-                    continue  # Continue the loop to enter another schedule
+                    validation_label.config(text=f"Conflict: The room {room_name} is already scheduled during that time.")
+                    return
 
-                new_schedule_item = {"ProfName": uid_data, "Schedule_Time": f"{user_start} to {user_end}"}
+                new_schedule_item = {"ProfName": "Bryan Etoquilla", "Schedule_Time": f"{user_start} to {user_end}"}
                 room_schedule["Schedule_Time"].append(new_schedule_item["Schedule_Time"])
                 room_schedule["ProfName"].append(new_schedule_item["ProfName"])
 
@@ -296,29 +263,51 @@ def add_schedule():
                 room_schedule["ProfName"] = [room_schedule["ProfName"][i] for i in sorted_indices]
 
                 shd[room_name] = room_schedule
-                print(f"Schedule added for {room_name} with {uid_data} from {user_start} to {user_end}.")
+                print(f"Schedule added for {room_name} with Bryan Etoquilla from {user_start} to {user_end}.")
 
                 print_schedule_table(datetime.datetime.now())
-                while True:
-                    another_schedule = input("Do you want to add another schedule? (y/n): ").lower()
 
-                    if another_schedule == "y":
-                        room_name = input("Enter room (or type 'exit' to quit): ")
-                        if room_name in shd:
-                            break 
-                        elif room_name == "exit":
-                            return  # Exit the function
-                        # Room name is valid, exit the room name loop
-                        else:
-                            print("Room not found in the schedule. Please enter a valid room name.")
-                    elif another_schedule == "n":
-                        return
-                    else:
-                        print("Invalid output!!!")
-                    
-                    
+                # Clear the input fields and validation label
+                room_combobox.set(room_options[0])
+                start_time_combobox.set(time_options[0])
+                end_time_combobox.set(time_options[0])
+                validation_label.config(text="")
+            except ValueError:
+                validation_label.config(text="Invalid input format. Please use the format '1:00 PM to 5:00 PM.'")
+        else:
+            validation_label.config(text="Room not found in the schedule. Please enter a valid room name.")
+
+    # Increase the button size
+    submit_button = ttk.Button(frame, text="Submit", command=submit_schedule, style="TButton")
+    submit_button.grid(row=4, column=0, columnspan=3, pady=20)
+
+    clear_button = ttk.Button(frame, text="Clear", command=lambda: [room_combobox.set(room_options[0]), start_time_combobox.set(time_options[0]), end_time_combobox.set(time_options[0]), validation_label.config(text="")], style="TButton")
+    clear_button.grid(row=5, column=0, columnspan=3, pady=20)
+
+    # Create a custom style to increase the button size
+    style = ttk.Style()
+    style.configure("TButton", padding=10, font=("Helvetica", 18))
+
+    # Pack the frame to make it adjust to the content
+    frame.pack(padx=10, pady=10)
+
+    root.mainloop()
+
+def update_html_schedule():
+    current_time = datetime.datetime.now()
+    print_schedule_table(current_time)
+
+def add_schedule_with_gui():
+    print("Scan your RFID card!")
+    uid_data = ser.readline().decode().strip()
+    if uid_data == "Bryan Etoquilla":
+        uid_data = "Bryan Etoquilla"
+        print("Recognized")
+        run_tikenter()
+
+        # Update the HTML schedule after GUI operation
+        update_html_schedule()
 
 while True:
     update_schedule()
-    add_schedule()
-    
+    add_schedule_with_gui()

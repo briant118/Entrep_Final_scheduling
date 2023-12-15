@@ -1,129 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="refresh" content="5">
-    <link rel="icon" type="image/x-icon" href="T.jpg">
-    <title>PSU</title>
-
-    <style>
-        .tm{
-            margin-top: 60px;
-            margin-bottom: 100px;
-            display: flex;
-            color: white;
-        }
-        .center {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 8%;
-        }
-
-        img {
-            border-radius: 100%;
-        }
-
-        body {
-            background-image: url("1.png");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-
-        table, th, td, tr{
-            border-spacing: 30px;
-            font-size: large;
-        }
-        th {
-            border: 10px solid rgb(255, 136, 0);
-            opacity: 0.8;
-            border-radius: 10px;
-            border-collapse: collapse;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
-            background-color: rgb(255, 136, 0);
-        }
-        td {
-            border: 1px solid rgba(255, 136, 0, 0.58);
-            opacity: 0.8;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-right: 5px;
-            background-color: rgba(255, 136, 0, 0.58);
-        }
-
-        #time {
-            font-size: 50px;
-            color: #fefefe;
-        }
-        #day {
-            color: white;
-            font-size: 25px;
-            font-weight: bold;
-        }
-        #date {
-            color: white;
-            font-size: 30px;
-        }
-    </style>
+    <link rel="icon" type="image/x-icon" href="T.png">
+    <link rel="stylesheet" href="styles.css">
+    <title>PalSU Scheduler</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 </head>
+
 <body>
-<div class="tm">
-    <h1><center>PSU Schedule</center></h1>
-    <img src="T.jpg" alt="Logo" width="50" height="80" class="center">
-    <div class="im">
-        <div id="time"></div>
-        <div id="day"></div>
-        <div id="date"></div>
-    </div>
+<div class="header">
+    <div class="logos-container">
+        <img class="logo" src="left_logo.png" alt="Left Logo">
+        <img class="logo" src="T.png" alt="T Logo">
+        <img class="logo" src="right_logo.png" alt="Right Logo">
+    </div>        
+    <br>
+    <br>
+    <br>
+    <h1>PSU Scheduler - Information Technology BUILDING (IT)</h1>
 </div>
-<table style="width:100%">
+
+<div class="time-and-date">
+    <div id="time"></div>
+    <div id="day"></div>
+    <div id="date"></div>
+</div>
+
+<div class="main-content">
+    <div class="schedule">
+        <table style="width:100%">
                 <tr>
                     <th>Room Name</th>
                     <th>Professor Name</th>
-                    <th>Schedule Time</th>
-                    <th>Status</th>
+                    <th class="time_sch">Schedule Time</th>
+                    <th class="status">Status</th>
                 </tr><tr>
-                      <td>room1</td>
-                      <td class=profname>Bryan Etoquilla<br>Bryan Etoquilla</td>
-                      <td id=time_sch>10:30 AM to 10:31 AM<br>10:32 AM to 10:33 AM</td>
-                      <td time_schd>Next class (10:30 AM to 10:31 AM)<br>Next class (10:32 AM to 10:33 AM)</td>
+                      <td>NIT1</td>
+                      <td class=profname>Bryan Etoquilla</td>
+                      <td id=time_sch>11:50 PM to 11:48 PM</td>
+                      <td time_schd>Next class (11:50 PM to 11:48 PM)</td>
                     </tr><tr>
-                      <td>room2</td>
+                      <td>NIT2</td>
+                      <td class=profname>Bryan Etoquilla</td>
+                      <td id=time_sch>11:54 PM to 11:58 PM</td>
+                      <td time_schd>Next class (11:54 PM to 11:58 PM)</td>
+                    </tr><tr>
+                      <td>NIT3</td>
                       <td class=profname></td>
                       <td id=time_sch></td>
                       <td time_schd></td>
                     </tr><tr>
-                      <td>room3</td>
+                      <td>MTC1</td>
                       <td class=profname></td>
                       <td id=time_sch></td>
                       <td time_schd></td>
-                    </tr></table>
-<script>
-    function updateTime() {
-        const timeLabel = document.getElementById('time');
-        const dayLabel = document.getElementById('day');
-        const dateLabel = document.getElementById('date');
-        
-        const now = new Date();
+                    </tr><tr>
+                      <td>MTC2</td>
+                      <td class=profname></td>
+                      <td id=time_sch></td>
+                      <td time_schd></td>
+                    </tr></table> <!-- Include the generated table -->
+    </div>
+</div>
 
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-        const dayString = now.toLocaleDateString('en-US', { weekday: 'long' });
-        const dateString = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-        timeLabel.textContent = timeString;
-        dayLabel.textContent = dayString;
-        dateLabel.textContent = dateString;
-    }
-
-    updateTime(); // Call the function to set initial values.
-
-    // Update the time every second
-    setInterval(updateTime, 1000);
-</script>
+<script src="script.js"></script>
+    
 </body>
 </html>
